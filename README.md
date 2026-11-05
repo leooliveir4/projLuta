@@ -279,7 +279,7 @@ São 103 testes em 7 arquivos, com aleatoriedade controlada:
 
 **3.2.0.** Integrou as sete ilustrações individuais (Lyra, Vexra, Dravenor, Kael, Nyxara, Vaelith e Vorath) em WebP com transparência. Os retratos foram derivados das mesmas imagens.
 
-** As imagens foram gerados por Inteligência Artificial.
+**As imagens foram gerados por Inteligência Artificial.**
 
 **3.3.0.** Refinou a interface sem mudar o funcionamento:
 
@@ -302,6 +302,8 @@ São 103 testes em 7 arquivos, com aleatoriedade controlada:
 Detalhes, verificações feitas no navegador e limitações estão em [`docs/polimento-visual.md`](docs/polimento-visual.md).
 
 **3.4.0.** Animou o combate com as artes atuais:
+
+**As animações foram feita com Inteligência Artificial (sem participação do Leonardo nessa etapa).
 
 - **Coreografia por habilidade.** Cada ataque básico e cada habilidade dos sete personagens (incluindo as três da Vaelith) tem, em `src/ui/choreography.ts`, a forma de se aproximar (corpo a corpo, à distância, conjuração ou em si mesmo), o projétil, o tipo de impacto e a força do tremor.
 - **Movimento.** Golpes corpo a corpo têm antecipação, investida até o adversário e recuo; tiros e magias saem da arma; o revide é um avanço rápido; a esquiva deixa um rastro.
