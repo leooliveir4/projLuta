@@ -278,6 +278,7 @@ São 103 testes em 7 arquivos, com aleatoriedade controlada:
 ## Apresentação visual
 
 **3.2.0.** Integrou as sete ilustrações individuais (Lyra, Vexra, Dravenor, Kael, Nyxara, Vaelith e Vorath) em WebP com transparência. Os retratos foram derivados das mesmas imagens.
+
 ** As imagens foram gerados por Inteligência Artificial.
 
 **3.3.0.** Refinou a interface sem mudar o funcionamento:
