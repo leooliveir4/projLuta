@@ -263,7 +263,7 @@ São 103 testes em 7 arquivos, com aleatoriedade controlada:
 ## Créditos e recursos
 
 - **Projeto original**: curso de JavaScript da [B7Web](https://b7web.com.br).
-- **Desenvolvimento**: Leo.
+- **Desenvolvimento**: Leonardo Oliveira.
 - **Personagens**: elenco original deste projeto.
   - As sete ilustrações (seis personagens e a Vaelith) são estáticas, em WebP com transparência, e ficam em `src/assets/images/characters`. Os retratos ficam em `portraits`.
   - Não são sprites quadro a quadro: os movimentos de combate são feitos em código sobre a mesma ilustração (veja [`docs/animacoes.md`](docs/animacoes.md)).
@@ -278,6 +278,7 @@ São 103 testes em 7 arquivos, com aleatoriedade controlada:
 ## Apresentação visual
 
 **3.2.0.** Integrou as sete ilustrações individuais (Lyra, Vexra, Dravenor, Kael, Nyxara, Vaelith e Vorath) em WebP com transparência. Os retratos foram derivados das mesmas imagens.
+** As imagens foram gerados por Inteligência Artificial.
 
 **3.3.0.** Refinou a interface sem mudar o funcionamento:
 
