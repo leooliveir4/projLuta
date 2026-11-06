@@ -1,6 +1,6 @@
 # Ícones das habilidades
 
-Cada ícone fica em `<pasta>/<id-da-habilidade>.webp` (ou `.png`), quadrado (os atuais têm 256 × 256). Para trocar um ícone, substitua o arquivo com o mesmo nome.
+Cada ícone fica em `<pasta>/<id-da-habilidade>.webp` (ou `.png`), quadrado, 512 × 512, pintura de ponta a ponta e sem moldura (o jogo coloca um filete dourado). Para trocar um ícone, substitua o arquivo com o mesmo nome.
 
 - `<pasta>` é o personagem: `lyra`, `vexra`, `dravenor`, `kael`, `nyxara`, `vorath`.
 - As versões do Eclipse (Lâmina Dilacerante, Marca Profana, Véu do Massacre) ficam em `vaelith/`, com os mesmos ids da Nyxara.

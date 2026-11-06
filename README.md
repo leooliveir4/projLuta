@@ -366,3 +366,11 @@ Combate, personagens, sons, animações e balanceamento não mudaram. Detalhes e
 - **Botões ajustados**: o ícone ficou um pouco maior, e o nome se ajusta para caber ao lado dele em qualquer largura de tela.
 
 Detalhes em [`docs/selecao.md`](docs/selecao.md).
+
+**3.9.0.** Ícones detalhados das habilidades:
+
+- **27 ilustrações** em pintura digital substituem os ícones conceituais: 4 por personagem e 3 da Vaelith, com os mesmos nomes e ids.
+- **Ajustes:** todos padronizados em 512 × 512 e recortados para a arte ocupar o ícone inteiro. No jogo, cada um tem um único filete dourado fino.
+- **Nyxara e Vaelith:** no Eclipse, as habilidades transformadas mostram os ícones demoníacos e, na volta, os da Nyxara.
+
+Interface, combate, sons, animações e cenários não mudaram. Detalhes em [`docs/selecao.md`](docs/selecao.md).

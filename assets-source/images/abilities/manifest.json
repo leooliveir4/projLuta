@@ -1,0 +1,54 @@
+{
+  "project": "Arena RPG",
+  "version": "detalhado-v4-completo",
+  "date": "2026-11-06",
+  "ready_for_game_webp": {
+    "lyra": [
+      "astral-orb",
+      "star-field",
+      "arcane-barrier",
+      "supernova"
+    ],
+    "dravenor": [
+      "ancestral-fury",
+      "devastating-blow",
+      "earth-rupture",
+      "iron-skin"
+    ],
+    "kael": [
+      "arcane-blade",
+      "ethereal-step",
+      "perfect-duel",
+      "dimensional-cut"
+    ],
+    "nyxara": [
+      "shadow-blade",
+      "abyss-mark",
+      "nyx-veil",
+      "eclipse"
+    ],
+    "vaelith": [
+      "shadow-blade",
+      "abyss-mark",
+      "nyx-veil"
+    ],
+    "vexra": [
+      "piercing-burst",
+      "explosive-grenade",
+      "auto-turret",
+      "overload"
+    ],
+    "vorath": [
+      "abyss-impact",
+      "assimilation",
+      "unstable-mass",
+      "void-rupture"
+    ]
+  },
+  "progress": {
+    "physically_archived": 27,
+    "total_planned": 27
+  },
+  "source_note": "Lyra e Dravenor vieram do pacote v3 já consolidado; Kael, Nyxara, Vaelith, Vexra e Vorath foram adicionados a partir das imagens fornecidas pelo usuário neste turno.",
+  "current_game_base": "3.8.0"
+}
