@@ -1,4 +1,4 @@
-import type { ImpactKind, ProjectileKind } from './choreography.ts';
+import { flightMs, type ImpactKind, type ProjectileKind } from './choreography.ts';
 import { h, wait } from './dom.ts';
 
 /** Ponto em pixels, relativo à arena. */
@@ -61,7 +61,7 @@ export class VfxLayer {
             { transform: `translate(0px, 0px) rotate(${angle}deg) scaleX(0.4)` },
             { transform: `translate(${dx}px, ${dy}px) rotate(${angle}deg) scaleX(1)` },
           ],
-          { duration: Math.max(110, distance * 0.28), easing: 'linear' },
+          { duration: flightMs('bullet', distance), easing: 'linear' },
         )
         .finished.catch(() => undefined);
       tracer.remove();
@@ -78,7 +78,7 @@ export class VfxLayer {
             { transform: `translate(${dx * 0.5}px, ${dy * 0.5 - lift}px) rotate(360deg)`, offset: 0.5 },
             { transform: `translate(${dx}px, ${dy}px) rotate(720deg)` },
           ],
-          { duration: 460, easing: 'linear' },
+          { duration: flightMs('grenade', distance), easing: 'linear' },
         )
         .finished.catch(() => undefined);
       grenade.remove();
@@ -93,7 +93,7 @@ export class VfxLayer {
           { transform: 'translate(0px, 0px) scale(0.6)', opacity: 0.8 },
           { transform: `translate(${dx}px, ${dy}px) scale(1.05)`, opacity: 1 },
         ],
-        { duration: kind === 'nova' ? 420 : 340, easing: 'cubic-bezier(0.45, 0, 0.75, 1)' },
+        { duration: flightMs(kind, distance), easing: 'cubic-bezier(0.45, 0, 0.75, 1)' },
       )
       .finished.catch(() => undefined);
     orb.remove();
@@ -106,14 +106,14 @@ export class VfxLayer {
   }
 
   /** Rachadura que corre pelo chão de um ponto a outro. */
-  async groundWave(from: Point, to: Point, palette: Palette): Promise<void> {
+  async groundWave(from: Point, to: Point, palette: Palette, duration = 300): Promise<void> {
     const width = Math.abs(to.x - from.x);
     const crack = this.spawn('vfx-crack', { x: Math.min(from.x, to.x), y: to.y }, palette, 900, {
       '--w': `${width}px`,
       '--origin': to.x >= from.x ? 'left' : 'right',
     });
     crack.style.width = `${width}px`;
-    await wait(300);
+    await wait(duration);
   }
 
   /* Impactos ------------------------------------------------------------ */

@@ -4,7 +4,7 @@ import type { CharacterId } from '../core/types.ts';
 import { Progression, type GameMode } from '../progression/Progression.ts';
 import { SaveManager } from '../progression/SaveManager.ts';
 import { SettingsStore } from '../progression/Settings.ts';
-import { MENU_BACKDROP, type StageId } from '../ui/art.ts';
+import { challengeStage, MENU_BACKDROP, type StageId } from '../ui/art.ts';
 import { AudioManager } from '../ui/AudioManager.ts';
 import { BattleUI } from '../ui/BattleUI.ts';
 import { h, prefersReducedMotion } from '../ui/dom.ts';
@@ -142,7 +142,7 @@ export class Game {
       enemyId: opponent.id,
       enemyLevel: opponent.level,
       difficulty: this.settings.value.difficulty,
-      stage: run.stage % 2 === 0 ? 'arcane' : 'ring',
+      stage: challengeStage(run.stage),
       challengeStage: run.stage,
     });
   }

@@ -7,10 +7,13 @@ import type { Ability, BattleAction, BattleEvent, ItemId, Side } from '../core/t
 import type { BattleConfig } from '../game/BattleController.ts';
 import { CHALLENGE_LENGTH } from '../progression/Progression.ts';
 import type { SettingsStore } from '../progression/Settings.ts';
-import { applyFrame, CHARACTER_ART, formArt, needsFlip, STAGES, type CharacterArt, type FormArt, type PoseName } from './art.ts';
-import { ALL_STATUS_CLASSES, moveFor, STATUS_CLASSES, type Move } from './choreography.ts';
+import { applyFrame, CHARACTER_ART, formArt, needsFlip, STAGES, TURRET_ART as turretArt, TURRET_MUZZLE, type CharacterArt, type FormArt, type PoseName } from './art.ts';
+import { ALL_STATUS_CLASSES, moveFor, moveTiming, STATUS_CLASSES, TIMING, type Move } from './choreography.ts';
+import { actionOutcome, BattleSound, NO_DELAY, type MoveTiming, type SyncPoint } from './sound/BattleSound.ts';
+import { clipsFor } from './sound/soundCatalog.ts';
 import { VfxLayer, type Direction, type Palette, type Point } from './Vfx.ts';
 import type { AudioManager } from './AudioManager.ts';
+import { abilityIcon } from './abilityIcons.ts';
 import { h, plural, svg, wait } from './dom.ts';
 import { ICONS, type IconName } from './icons.ts';
 import { Screen } from './screens/Screen.ts';
@@ -132,7 +135,11 @@ class FighterView {
       decoding: 'async',
     });
     this.floats = h('div', { class: 'combatant__floats', 'aria-hidden': 'true' });
-    this.turret = h('div', { class: 'fx-turret', 'aria-hidden': 'true' }, h('span', { class: 'fx-turret__barrel' }));
+    this.turret = h(
+      'div',
+      { class: 'fx-turret', 'aria-hidden': 'true' },
+      h('img', { class: 'fx-turret__img', src: turretArt, alt: '', decoding: 'async' }),
+    );
     const status = h(
       'div',
       { class: 'combatant__status', 'aria-hidden': 'true' },
@@ -260,11 +267,13 @@ class FighterView {
     return this.pointInArt(bounds, this.currentArt.frame.anchorX, 0.98);
   }
 
-  /** Centro da torre da Vexra, quando ela está em campo. */
+  /** Boca do canhão da torre da Vexra, quando ela está em campo (a arte aponta para a direita). */
   turretPoint(bounds: DOMRect): Point {
     const rect = this.turret.getBoundingClientRect();
     if (!rect.width) return this.center(bounds);
-    return { x: rect.left + rect.width / 2 - bounds.left, y: rect.top + rect.height / 2 - bounds.top };
+    const [mx, my] = TURRET_MUZZLE;
+    const x = this.direction === 1 ? mx : 1 - mx;
+    return { x: rect.left + rect.width * x - bounds.left, y: rect.top + rect.height * my - bounds.top };
   }
 
   /** Enquadra a arte da forma atual: escala, ponto de apoio, máscara e espelhamento. */
@@ -370,8 +379,13 @@ export class BattleUI extends Screen {
   private readonly engine: BattleEngine;
   private readonly fighters: Record<Side, FighterView>;
   private readonly arena: HTMLElement;
+  /** Mantém a linha do chão do cenário alinhada com os pés dos lutadores. */
+  private floorObserver: ResizeObserver | null = null;
   private readonly vfx: HTMLElement;
   private readonly effects: VfxLayer;
+  private readonly sound: BattleSound;
+  /** Instante marcado pelo som para o próximo disparo, impacto ou clarão. */
+  private syncPoint: SyncPoint | null = null;
   /** Ação em andamento: define como os danos seguintes são desenhados. */
   private acting: { side: Side; move: Move } | null = null;
   /** Lutador que avançou até o adversário e ainda precisa voltar. */
@@ -403,6 +417,12 @@ export class BattleUI extends Screen {
       player: new FighterView('player', this.engine.character('player')),
       enemy: new FighterView('enemy', this.engine.character('enemy'), options.config.playerId === options.config.enemyId),
     };
+    this.sound = new BattleSound(options.audio, {
+      player: this.engine.character('player').formId,
+      enemy: this.engine.character('enemy').formId,
+    });
+    // Só os sons dos dois lutadores (mais impacto e nocaute); os demais são liberados.
+    void options.audio.preload(clipsFor([this.engine.character('player').id, this.engine.character('enemy').id]));
 
     this.turnLabel = h('span', { class: 'turn-badge__label' }, 'Preparar');
     this.turnFlow = h('div', { class: 'turn-badge__flow', 'aria-hidden': 'true' });
@@ -474,6 +494,14 @@ export class BattleUI extends Screen {
     );
     stage.style.setProperty('--arena-image', `url("${STAGES[options.config.stage].image}")`);
     this.element.append(stage, this.dialog);
+    // Distância do topo do cenário até os pés dos lutadores (base da arena). O CSS usa esse
+    // número para que o piso das artes fique sob os personagens em qualquer proporção de tela.
+    if (typeof ResizeObserver !== 'undefined') {
+      const update = (): void => stage.style.setProperty('--floor-y', `${Math.round(this.arena.offsetTop + this.arena.offsetHeight)}px`);
+      this.floorObserver = new ResizeObserver(update);
+      this.floorObserver.observe(stage);
+      this.floorObserver.observe(this.arena);
+    }
 
     this.renderMenu();
     this.showDefaultInfo();
@@ -487,6 +515,8 @@ export class BattleUI extends Screen {
   protected override onDestroy(): void {
     this.destroyed = true;
     this.paused = false;
+    this.floorObserver?.disconnect();
+    this.options.audio.stopAll();
     this.flushResumeWaiters();
     if (this.dialog.open) this.dialog.close();
   }
@@ -524,20 +554,22 @@ export class BattleUI extends Screen {
   }
 
   async playEvents(events: BattleEvent[]): Promise<void> {
-    for (const event of events) {
+    for (let index = 0; index < events.length; index += 1) {
+      const event = events[index];
       await this.waitWhilePaused();
       if (this.destroyed) return;
-      await this.present(event);
+      await this.present(event, events, index);
       if (event.logId !== undefined) this.appendLog(event.logId);
     }
     await this.retreat();
     this.acting = null;
+    this.sound.endAction();
     if (!this.destroyed) this.refresh();
   }
 
   /* Apresentação dos eventos ------------------------------------------ */
 
-  private async present(event: BattleEvent): Promise<void> {
+  private async present(event: BattleEvent, events: readonly BattleEvent[] = [event], index = 0): Promise<void> {
     const audio = this.options.audio;
     switch (event.type) {
       case 'battle-start': {
@@ -550,6 +582,8 @@ export class BattleUI extends Screen {
       case 'turn-start': {
         await this.retreat();
         this.acting = null;
+        this.syncPoint = null;
+        this.sound.endAction();
         this.refreshTurn(event.turn, event.side);
         this.fighters[event.side].setGuard(false);
         this.renderTurnOrder(event.side);
@@ -567,37 +601,52 @@ export class BattleUI extends Screen {
             : event.action.type === 'defend'
               ? `${name} defende`
               : `${name}: ${event.label}`;
+        const outcome = actionOutcome(events, index);
         if (event.action.type === 'attack') {
           this.acting = { side: event.side, move: moveFor(actor.character.id, null) };
+          this.syncPoint = this.sound.action(event.side, { type: 'attack' }, outcome, this.timingFor(event.side, this.acting.move));
           await this.windUp(event.side, this.acting.move);
         } else if (event.action.type === 'ability') {
           const ability = actor.character.getAbility(event.action.abilityId);
           const move = moveFor(actor.character.id, event.action.abilityId, ability?.target ?? 'enemy');
           this.acting = { side: event.side, move };
           this.callout(actor, event.label);
-          audio.play('ability');
+          // O som é agendado antes da animação, para coincidir com o disparo ou o impacto.
+          this.syncPoint = this.sound.action(event.side, { type: 'ability', abilityId: event.action.abilityId }, outcome, this.timingFor(event.side, move));
           if (move.approach === 'self') await this.selfMove(actor, move);
           else await this.windUp(event.side, move);
         } else if (event.action.type === 'item') {
           this.acting = null;
+          this.sound.action(event.side, { type: 'other' }, outcome, NO_DELAY);
           this.callout(actor, event.label);
           audio.play('buff');
           actor.setPose('cast', 420);
           await this.delay(380);
         } else {
           this.acting = null;
+          this.sound.action(event.side, { type: 'other' }, outcome, NO_DELAY);
         }
         break;
       }
       case 'damage': {
         const target = this.fighters[event.target];
-        if (this.animated) await this.drawHit(event.source, event.target, event.kind, event.critical, event.amount);
+        // Tiro da torre e golpes seguintes de habilidades com vários danos: o projétil sai agora.
+        const hitSync = this.sound.beforeHit(event, NO_DELAY);
+        if (hitSync) this.syncPoint = hitSync;
+        // O impacto genérico soa no instante do golpe (antes da pausa do crítico).
+        let impactSounded = false;
+        const impactSound = (): void => {
+          if (impactSounded) return;
+          impactSounded = true;
+          this.sound.impact(event);
+        };
+        if (this.animated) await this.drawHit(event.source, event.target, event.kind, event.critical, event.amount, impactSound);
         const fixed = event.kind === 'periodic' || event.kind === 'turret';
         const variant: FloatVariant = event.critical ? 'critical' : fixed ? 'periodic' : 'damage';
         const label = event.critical ? `Crítico! −${event.amount}` : `−${event.amount}`;
         target.float(event.guarded ? `${label} (guarda)` : label, variant);
         target.flash(event.kind === 'periodic' ? 'is-burning' : 'is-hit', 420);
-        audio.play(event.critical ? 'critical' : 'hit');
+        impactSound();
         target.setHp(event.hpAfter);
         await this.delay(event.critical ? 620 : 460);
         break;
@@ -607,7 +656,7 @@ export class BattleUI extends Screen {
         if (this.animated) await this.drawMiss(event.source, event.target);
         target.flash('is-dodging', 420);
         target.float('Esquivou!', 'miss');
-        audio.play('dodge');
+        this.sound.dodge(event);
         await this.delay(460);
         break;
       }
@@ -656,12 +705,13 @@ export class BattleUI extends Screen {
         await this.retreat();
         const fighter = this.fighters[event.target];
         const eclipse = event.form !== 'base';
+        // O som começa com a energia convergindo; o trecho mais forte cai no clarão.
+        this.syncPoint = this.sound.formChange(event.target, event.form, this.animated && eclipse ? TIMING.formCharge : 0);
         if (this.animated) await this.drawFormChange(fighter, eclipse);
         fighter.setForm(event.form);
         fighter.renderBadges();
         fighter.flash(eclipse ? 'is-transforming' : 'is-empowered', 900);
         fighter.float(eclipse ? 'Eclipse!' : 'Forma normal', eclipse ? 'debuff' : 'buff');
-        audio.play(eclipse ? 'ability' : 'buff');
         if (eclipse) await this.showBanner('Vaelith assume o controle', 'eclipse', 1200);
         else await this.delay(500);
         this.effects.dim(false);
@@ -695,7 +745,7 @@ export class BattleUI extends Screen {
         fallen.setBasePose('defeat');
         fallen.figure.classList.add('is-defeated');
         if (this.animated) this.effects.shake(2);
-        audio.play('knockout');
+        this.sound.knockout();
         await this.delay(900);
         break;
       }
@@ -721,6 +771,29 @@ export class BattleUI extends Screen {
 
   private delay(ms: number): Promise<void> {
     return wait(this.animated ? ms : Math.min(120, ms * 0.3));
+  }
+
+  /**
+   * Espera, se preciso, o instante marcado pelo som para este acontecimento. O som é agendado
+   * com uma pequena folga; aqui a animação o alcança (no máximo alguns quadros), para que
+   * golpe e som coincidam mesmo quando a animação atrasa. Sem som marcado, não espera nada.
+   */
+  private async holdUntil(moment: SyncPoint['moment']): Promise<void> {
+    const sync = this.syncPoint;
+    if (!sync || sync.moment !== moment) return;
+    this.syncPoint = null;
+    const remaining = sync.at - performance.now();
+    if (remaining > 4) await wait(Math.min(remaining, 250));
+  }
+
+  /** Quanto falta para o disparo e para o impacto da ação que vai começar. */
+  private timingFor(side: Side, move: Move): MoveTiming {
+    if (!this.animated) return NO_DELAY;
+    const bounds = this.arenaBounds;
+    const actor = this.fighters[side];
+    const to = this.fighters[otherSide(side)].center(bounds);
+    const from = move.approach === 'ranged' ? actor.muzzle(bounds) : actor.center(bounds);
+    return moveTiming(move, Math.hypot(to.x - from.x, to.y - from.y));
   }
 
   private get arenaBounds(): DOMRect {
@@ -765,7 +838,7 @@ export class BattleUI extends Screen {
         { transform: `translateX(${-actor.direction * 16}px)`, offset: 0.38 },
         { transform: `translateX(${dx}px)` },
       ],
-      { duration: 340, easing: 'cubic-bezier(0.55, 0, 0.25, 1)', fill: 'forwards' },
+      { duration: TIMING.approach, easing: 'cubic-bezier(0.55, 0, 0.25, 1)', fill: 'forwards' },
     );
     this.engaged = { side, animation };
     await animation.finished.catch(() => undefined);
@@ -800,20 +873,21 @@ export class BattleUI extends Screen {
         break;
       case 'ranged':
         actor.setPose('windup', 260);
-        if (move.charge) await this.effects.charge(actor.muzzle(bounds), actor.palette, 520);
-        else await wait(130);
+        if (move.charge) await this.effects.charge(actor.muzzle(bounds), actor.palette, TIMING.charge);
+        else await wait(TIMING.aim);
         actor.setPose('cast', 360);
         break;
       case 'cast':
         if (move.groundWave) {
           actor.setPose('strike', 620);
-          await wait(140);
+          await wait(TIMING.slam);
+          await this.holdUntil('launch');
           this.effects.shake(1);
-          await this.effects.groundWave(actor.ground(bounds), target.ground(bounds), actor.palette);
+          await this.effects.groundWave(actor.ground(bounds), target.ground(bounds), actor.palette, TIMING.groundWave);
         } else {
           actor.setPose('cast', 760);
-          if (move.charge) await this.effects.charge(target.center(bounds), actor.palette, 520);
-          else await wait(220);
+          if (move.charge) await this.effects.charge(target.center(bounds), actor.palette, TIMING.charge);
+          else await wait(TIMING.castAim);
         }
         // Marcas não causam dano: o símbolo aparece já na conjuração.
         if (move.impact === 'sigil') {
@@ -866,7 +940,7 @@ export class BattleUI extends Screen {
   }
 
   /** Desenha o que causou o dano (projétil, corte, explosão) e a reação de quem sofreu. */
-  private async drawHit(sourceSide: Side, targetSide: Side, kind: string, critical: boolean, amount: number): Promise<void> {
+  private async drawHit(sourceSide: Side, targetSide: Side, kind: string, critical: boolean, amount: number, onImpact?: () => void): Promise<void> {
     const source = this.fighters[sourceSide];
     const target = this.fighters[targetSide];
     const bounds = this.arenaBounds;
@@ -874,8 +948,10 @@ export class BattleUI extends Screen {
     if ((kind === 'basic' || kind === 'ability') && this.acting?.side === sourceSide) {
       const move = this.acting.move;
       if (move.approach === 'ranged' && move.projectile) {
+        await this.holdUntil('launch');
         await this.effects.projectile(move.projectile, source.muzzle(bounds), at, source.palette);
       }
+      await this.holdUntil('impact');
       if (move.impact === 'drain') this.effects.drain(at, source.center(bounds), source.palette);
       if (move.impact && move.impact !== 'sigil') this.effects.impact(move.impact, at, source.palette, source.direction, target.ground(bounds));
       this.effects.shake(Math.max(move.shake ?? 0, critical ? 2 : 0));
@@ -884,11 +960,13 @@ export class BattleUI extends Screen {
       await this.lunge(sourceSide);
       this.effects.impact('slash', at, source.palette, source.direction);
     } else if (kind === 'turret') {
+      await this.holdUntil('launch');
       await this.effects.projectile('bullet', source.turretPoint(bounds), at, source.palette);
       this.effects.impact('burst', at, source.palette, source.direction);
     } else if (critical) {
       this.effects.impact('burst', at, source.palette, source.direction);
     }
+    onImpact?.();
     // Pausa curta no crítico: o golpe "pesa" antes do número aparecer.
     if (critical) await wait(110);
     if (amount > 0 && kind !== 'periodic') target.setPose('hurt', 300);
@@ -902,6 +980,7 @@ export class BattleUI extends Screen {
     const move = this.acting?.side === sourceSide ? this.acting.move : null;
     if (move?.approach === 'ranged' && move.projectile) {
       const at = target.center(bounds);
+      await this.holdUntil('launch');
       await this.effects.projectile(move.projectile, source.muzzle(bounds), { x: at.x + source.direction * 70, y: at.y - 50 }, source.palette);
     }
     target.ghost();
@@ -914,7 +993,8 @@ export class BattleUI extends Screen {
     if (eclipse) {
       this.effects.dim(true);
       fighter.setPose('cast', 900);
-      await this.effects.charge(center, red, 620);
+      await this.effects.charge(center, red, TIMING.formCharge);
+      await this.holdUntil('flash');
       this.effects.flash('#ff2e56', 420);
       this.effects.ring(center, red, true);
       this.effects.shake(2);
@@ -1038,6 +1118,7 @@ export class BattleUI extends Screen {
     }
 
     this.menu.className = `actions__menu actions__menu--${this.menuView}`;
+    this.menu.style.setProperty('--c1', CHARACTER_ART[player.id].primary);
     this.menu.replaceChildren(...buttons);
   }
 
@@ -1090,6 +1171,7 @@ export class BattleUI extends Screen {
         title: reason,
         'aria-keyshortcuts': String(index + 1),
       },
+      abilityIcon(player.id, ability, player.formId, 'skill-button__icon'),
       h('span', { class: 'skill-button__name' }, ability.name),
       h(
         'span',
