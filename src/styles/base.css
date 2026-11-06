@@ -591,18 +591,22 @@ dialog.modal::backdrop {
   object-fit: cover;
 }
 
-/* A ilustração já traz a própria moldura: sem o chanfro e a borda dourada do marcador. */
+/*
+ * Ilustração: pintura de ponta a ponta, sem moldura própria. O jogo coloca um único filete
+ * dourado fino e cantos levemente arredondados (sem o chanfro do marcador provisório), para a
+ * arte aparecer inteira e não haver moldura dupla.
+ */
 .ability-icon--art {
-  padding: 0;
+  padding: 1px;
   clip-path: none;
-  border-radius: 6px;
-  background: none;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+  border-radius: 7px;
+  background: linear-gradient(150deg, #f6d48a 0%, #8c6220 45%, #c9953f 100%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 .ability-icon--art > img {
   clip-path: none;
-  border-radius: inherit;
+  border-radius: 6px;
 }
 
 .ability-icon--fallback {

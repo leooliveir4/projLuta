@@ -52,6 +52,8 @@ O `BattleEngine`, a IA, as fórmulas, os atributos, os custos, as recargas, os s
 
 ## Ícones das habilidades
 
+> **Atualização (3.9.0):** os 27 ícones conceituais foram substituídos pelas ilustrações detalhadas (pintura digital), com os mesmos nomes e ids. Veja a seção "Ícones detalhados (3.9.0)" no fim deste documento.
+>
 > **Atualização (3.8.0):** os 27 ícones ilustrados (versão 1, conceitual) foram integrados. Todas as habilidades dos seis personagens e as três versões da Vaelith têm ícone. O botão bloqueado do Eclipse, durante a transformação, usa o ícone do Eclipse da Nyxara. O marcador provisório continua existindo para qualquer habilidade futura sem ícone.
 
 A estrutura foi preparada na 3.6.0, quando ainda não havia ícones finais.
@@ -60,7 +62,7 @@ A estrutura foi preparada na 3.6.0, quando ainda não havia ícones finais.
 
 Coloque o arquivo em `src/assets/images/abilities/<pasta>/<id>.webp` (ou `.png`). O jogo encontra o arquivo sozinho no build, sem mudar código. Se um ícone faltar, aparece o marcador no lugar, e nada é bloqueado.
 
-- **Formato:** quadrado; os atuais têm 256 × 256, e 512 × 512 também serve. Sem texto e sem retrato. Os ícones da 3.8.0 trazem a própria moldura, então o jogo não acrescenta outra por cima.
+- **Formato:** quadrado, 512 × 512 (o padrão desde a 3.9.0), pintura de ponta a ponta, sem texto, sem retrato e sem moldura. O jogo acrescenta um único filete dourado fino.
 - **Leitura:** precisa funcionar em 30 a 84 px.
 - **Pasta:** é o personagem. As versões do Eclipse ficam em `vaelith/`, com os mesmos ids da Nyxara; o jogo escolhe a pasta pela forma ativa. Se a pasta da forma não tiver o ícone, usa o da forma base.
 
@@ -109,3 +111,47 @@ O primeiro lote planejado é o da Lyra, descrito no brief: `lyra/astral-orb`, `l
 
 - Testado só no Chrome; Safari e Firefox não foram testados.
 - Num celular com a tela deitada (paisagem baixa), a página rola na vertical, como antes.
+
+## Ícones detalhados (3.9.0)
+
+Os 27 ícones conceituais da 3.8.0 deram lugar às ilustrações detalhadas do pacote "Ícones Detalhados v4": 4 por personagem e 3 da Vaelith. Os nomes e os ids não mudaram, então nenhum código de mapeamento precisou mudar.
+
+### Preparação dos arquivos
+
+O pacote veio com tamanhos diferentes: 512 × 512 (Lyra e Dravenor) e 1024 × 1024 (os demais). Alguns ícones também traziam a arte como um quadro menor dentro da imagem. Para manter tamanho, enquadramento e leitura iguais:
+
+- **Tamanho.** Todos foram padronizados em **512 × 512**, WebP com qualidade 88. Isso é mais que o suficiente para o maior uso, 84 px na seleção em telas grandes. O total caiu de cerca de 3 MB para cerca de 1,3 MB.
+- **Bordas brancas.** O Kael (Lâmina Arcana) e o Eclipse da Nyxara vinham com a arte no meio de uma área branca. O corte foi automático, pela área não branca.
+- **Arte num quadro menor.** Em Corte Dimensional, Duelo Perfeito, Passo Etéreo, Marca do Abismo, as três da Vaelith, Impacto do Abismo e Assimilação, o recorte foi para o quadro da arte. Assim o desenho ocupa o ícone inteiro e não aparece uma "moldura" pintada dentro da moldura do jogo.
+- **Sem retoque.** Cores e detalhes não foram retocados: só houve recorte e redimensionamento.
+
+Os arquivos do pacote, sem alteração, ficam em `assets-source/images/abilities/`. Lá também estão o manifesto e `ajustes.json`, com o recorte exato de cada ícone em pixels. Os PNG originais de alta resolução (cerca de 27 MB) não foram colocados no repositório.
+
+### CSS
+
+- **Moldura.** Antes, cada ilustração usava a moldura própria do desenho. Agora, como os novos ícones são pintura de ponta a ponta, o jogo coloca **um único filete dourado de 1 px** com cantos levemente arredondados (`.ability-icon--art`, em `base.css`). É uma moldura só, sem o chanfro do marcador provisório.
+- **Botões e painéis.** O tamanho nos botões de combate (38 px no desktop, 34 a 40 px no celular) e na seleção (54 a 84 px) e a disposição dos painéis não mudaram.
+
+### Nyxara e Vaelith
+
+| Forma | Ícones usados |
+| --- | --- |
+| Normal | Os quatro da Nyxara. |
+| Durante o Eclipse | Lâmina Dilacerante, Marca Profana e Véu do Massacre com os ícones da pasta `vaelith/`. O botão bloqueado do Eclipse continua com o ícone do Eclipse da Nyxara, porque não há um próprio da Vaelith. |
+| Ao voltar | Os quatro da Nyxara de novo, automaticamente. |
+
+Essa troca foi conferida no navegador pelos arquivos realmente carregados em cada momento: os quatro da Nyxara, depois os três da Vaelith mais o Eclipse da Nyxara, depois os quatro da Nyxara outra vez, no desktop e no celular.
+
+### Verificação
+
+| Verificação | Resultado |
+| --- | --- |
+| `npm test` | 147 testes passando, incluindo "todas as habilidades dos seis personagens e da Vaelith têm ícone". |
+| `npm run typecheck` | Sem erros. |
+| `npm run build` | Sem erros. O Vite gerou os **27** arquivos de ícone, com nomes com hash e nenhum caminho quebrado. |
+| Navegador (Chrome com Playwright, build de produção) | Seleção e painel de combate dos seis personagens em 1440 × 900 e 390 × 844, com todos os ícones carregados. Transformação e retorno da Nyxara. Nomes das habilidades cabendo nos botões de 360 a 1920 px. Roteiro completo (menu, luta, Eclipse, resultado) sem erros e sem rolagem horizontal. |
+
+### Limitações
+
+- **Ícones escuros em tamanho pequeno.** Granada Explosiva, Torre Automática, Véu Espectral e Assimilação têm fundo escuro e ficam menos legíveis a 34–38 px do que os da Lyra e do Dravenor. As cores não foram mexidas, para preservar a arte; se quiser, dá para clarear só esses arquivos.
+- **Botão do Eclipse durante a transformação.** Usa o ícone do Eclipse da Nyxara, porque o pacote não tem um próprio da Vaelith (comportamento esperado).

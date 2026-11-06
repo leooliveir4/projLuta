@@ -1,0 +1,461 @@
+{
+ "dravenor/ancestral-fury": {
+  "original": [
+   512,
+   512
+  ],
+  "recorte": [
+   0,
+   0,
+   512,
+   512
+  ],
+  "final": [
+   512,
+   512
+  ],
+  "kB": 71
+ },
+ "dravenor/devastating-blow": {
+  "original": [
+   512,
+   512
+  ],
+  "recorte": [
+   0,
+   0,
+   512,
+   512
+  ],
+  "final": [
+   512,
+   512
+  ],
+  "kB": 78
+ },
+ "dravenor/earth-rupture": {
+  "original": [
+   512,
+   512
+  ],
+  "recorte": [
+   0,
+   0,
+   512,
+   512
+  ],
+  "final": [
+   512,
+   512
+  ],
+  "kB": 80
+ },
+ "dravenor/iron-skin": {
+  "original": [
+   512,
+   512
+  ],
+  "recorte": [
+   0,
+   0,
+   512,
+   512
+  ],
+  "final": [
+   512,
+   512
+  ],
+  "kB": 61
+ },
+ "kael/arcane-blade": {
+  "original": [
+   1024,
+   1024
+  ],
+  "recorte": [
+   153,
+   152,
+   865,
+   864
+  ],
+  "final": [
+   512,
+   512
+  ],
+  "kB": 52
+ },
+ "kael/dimensional-cut": {
+  "original": [
+   1024,
+   1024
+  ],
+  "recorte": [
+   102,
+   82,
+   922,
+   901
+  ],
+  "final": [
+   512,
+   512
+  ],
+  "kB": 39
+ },
+ "kael/ethereal-step": {
+  "original": [
+   1024,
+   1024
+  ],
+  "recorte": [
+   92,
+   61,
+   932,
+   901
+  ],
+  "final": [
+   512,
+   512
+  ],
+  "kB": 32
+ },
+ "kael/perfect-duel": {
+  "original": [
+   1024,
+   1024
+  ],
+  "recorte": [
+   102,
+   82,
+   922,
+   901
+  ],
+  "final": [
+   512,
+   512
+  ],
+  "kB": 40
+ },
+ "lyra/arcane-barrier": {
+  "original": [
+   512,
+   512
+  ],
+  "recorte": [
+   0,
+   0,
+   512,
+   512
+  ],
+  "final": [
+   512,
+   512
+  ],
+  "kB": 61
+ },
+ "lyra/astral-orb": {
+  "original": [
+   512,
+   512
+  ],
+  "recorte": [
+   0,
+   0,
+   512,
+   512
+  ],
+  "final": [
+   512,
+   512
+  ],
+  "kB": 57
+ },
+ "lyra/star-field": {
+  "original": [
+   512,
+   512
+  ],
+  "recorte": [
+   0,
+   0,
+   512,
+   512
+  ],
+  "final": [
+   512,
+   512
+  ],
+  "kB": 61
+ },
+ "lyra/supernova": {
+  "original": [
+   512,
+   512
+  ],
+  "recorte": [
+   0,
+   0,
+   512,
+   512
+  ],
+  "final": [
+   512,
+   512
+  ],
+  "kB": 80
+ },
+ "nyxara/abyss-mark": {
+  "original": [
+   1024,
+   1024
+  ],
+  "recorte": [
+   154,
+   124,
+   870,
+   840
+  ],
+  "final": [
+   512,
+   512
+  ],
+  "kB": 47
+ },
+ "nyxara/eclipse": {
+  "original": [
+   1024,
+   1024
+  ],
+  "recorte": [
+   111,
+   111,
+   913,
+   913
+  ],
+  "final": [
+   512,
+   512
+  ],
+  "kB": 36
+ },
+ "nyxara/nyx-veil": {
+  "original": [
+   1024,
+   1024
+  ],
+  "recorte": [
+   0,
+   0,
+   1024,
+   1024
+  ],
+  "final": [
+   512,
+   512
+  ],
+  "kB": 17
+ },
+ "nyxara/shadow-blade": {
+  "original": [
+   1024,
+   1024
+  ],
+  "recorte": [
+   0,
+   0,
+   1024,
+   1024
+  ],
+  "final": [
+   512,
+   512
+  ],
+  "kB": 32
+ },
+ "vaelith/abyss-mark": {
+  "original": [
+   1024,
+   1024
+  ],
+  "recorte": [
+   195,
+   174,
+   819,
+   798
+  ],
+  "final": [
+   512,
+   512
+  ],
+  "kB": 42
+ },
+ "vaelith/nyx-veil": {
+  "original": [
+   1024,
+   1024
+  ],
+  "recorte": [
+   215,
+   174,
+   809,
+   768
+  ],
+  "final": [
+   512,
+   512
+  ],
+  "kB": 38
+ },
+ "vaelith/shadow-blade": {
+  "original": [
+   1024,
+   1024
+  ],
+  "recorte": [
+   230,
+   220,
+   783,
+   773
+  ],
+  "final": [
+   512,
+   512
+  ],
+  "kB": 22
+ },
+ "vexra/auto-turret": {
+  "original": [
+   1024,
+   1024
+  ],
+  "recorte": [
+   0,
+   0,
+   1024,
+   1024
+  ],
+  "final": [
+   512,
+   512
+  ],
+  "kB": 27
+ },
+ "vexra/explosive-grenade": {
+  "original": [
+   1024,
+   1024
+  ],
+  "recorte": [
+   0,
+   0,
+   1024,
+   1024
+  ],
+  "final": [
+   512,
+   512
+  ],
+  "kB": 31
+ },
+ "vexra/overload": {
+  "original": [
+   1024,
+   1024
+  ],
+  "recorte": [
+   0,
+   0,
+   1024,
+   1024
+  ],
+  "final": [
+   512,
+   512
+  ],
+  "kB": 50
+ },
+ "vexra/piercing-burst": {
+  "original": [
+   1024,
+   1024
+  ],
+  "recorte": [
+   0,
+   0,
+   1024,
+   1024
+  ],
+  "final": [
+   512,
+   512
+  ],
+  "kB": 44
+ },
+ "vorath/abyss-impact": {
+  "original": [
+   1024,
+   1024
+  ],
+  "recorte": [
+   67,
+   67,
+   957,
+   957
+  ],
+  "final": [
+   512,
+   512
+  ],
+  "kB": 52
+ },
+ "vorath/assimilation": {
+  "original": [
+   1024,
+   1024
+  ],
+  "recorte": [
+   102,
+   82,
+   922,
+   901
+  ],
+  "final": [
+   512,
+   512
+  ],
+  "kB": 36
+ },
+ "vorath/unstable-mass": {
+  "original": [
+   1024,
+   1024
+  ],
+  "recorte": [
+   0,
+   0,
+   1024,
+   1024
+  ],
+  "final": [
+   512,
+   512
+  ],
+  "kB": 37
+ },
+ "vorath/void-rupture": {
+  "original": [
+   1024,
+   1024
+  ],
+  "recorte": [
+   0,
+   0,
+   1024,
+   1024
+  ],
+  "final": [
+   512,
+   512
+  ],
+  "kB": 44
+ }
+}
