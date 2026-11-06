@@ -63,9 +63,10 @@ A influência sobe ao causar dano direto (+15 por ação), ao sofrer dano direto
   - No fácil, a IA não planeja: avalia só a próxima ação.
 - **Modo desafio**: três adversários sorteados e, por fim, a sua própria sombra. Inclui experiência, níveis (até o 10), evolução moderada de atributos e estatísticas.
 - **Duelo**: luta avulsa com os dois lutadores no nível 1.
-- **Dois cenários**: a Arena Arcana (SVG original) e o ringue do projeto do curso.
+- **Cinco cenários**: Arena Arcana (SVG original), o ringue do projeto do curso, Ruínas Antigas, Templo do Eclipse e Dimensão Abissal (veja [`docs/cenarios.md`](docs/cenarios.md)).
 - **Salvamento em `localStorage`**, com migração explícita de saves antigos.
 - **Animações de combate**: investida e recuo nos golpes corpo a corpo, projéteis que saem da arma, um efeito próprio para cada habilidade, tremor de tela, pausa no crítico, poses de preparo, golpe, dano, vitória e derrota, e efeitos visíveis enquanto um estado dura (escudo, brasas, sangramento, torre, marca, lentidão, auras).
+- **Efeitos sonoros**: sons próprios para as habilidades principais de cada personagem e para a transformação em Vaelith, sincronizados com o disparo, o golpe ou a explosão de cada animação, além do impacto genérico e dos sons sintetizados de menus, defesa e cura (veja [`docs/audio.md`](docs/audio.md)).
 - **Opções**: volume, efeitos sonoros, animações (respeitando a preferência do sistema por movimento reduzido) e dificuldade.
 - **Responsivo e acessível pelo teclado**: atalhos `1` a `4` e `Esc`; no celular, os painéis se reorganizam.
 
@@ -156,6 +157,10 @@ tests/                     Testes do Vitest
 docs/balanceamento.md      Relatório de balanceamento
 docs/polimento-visual.md   Enquadramento das artes, ajustes de interface e verificação no navegador (3.3.0)
 docs/animacoes.md          Animações de combate, poses e especificação das artes de pose (3.4.0)
+docs/audio.md              Efeitos sonoros: arquivos, sincronização, volume e como adicionar novos (3.5.0)
+docs/selecao.md            Nova seleção de personagem e ícones de habilidade (3.6.0)
+docs/cenarios.md           Os cinco cenários, enquadramento e contraste (3.7.0)
+assets-source/             Originais dos sons (Firefly) e da arte da torre, fora do build
 ```
 
 ### Regras de combate
@@ -270,8 +275,13 @@ São 103 testes em 7 arquivos, com aleatoriedade controlada:
   - Artes de pose desenhadas (preparo, golpe, dano etc.) podem ser acrescentadas depois em `poses`, no mesmo arquivo `art.ts`, sem mudar código.
   - Para trocar uma arte, substitua o arquivo e revise o enquadramento dela em `src/ui/art.ts`. As formas alternativas, como a Vaelith, ficam em `forms`.
 - **Arena Arcana**: cenário original em SVG.
+- **Ruínas Antigas, Templo do Eclipse e Dimensão Abissal**: cenários gerados por Inteligência Artificial para o projeto, em `src/assets/images/stages`.
 - **Ringue**: imagem de *vectorpouch* no [Freepik](https://www.freepik.com), vinda do projeto original (a licença gratuita exige atribuição).
-- **Sons**: golpe e nocaute vêm do projeto original, e a origem e a licença deles não estão documentadas. Vale confirmar ou trocar antes de publicar. Os demais efeitos são sintetizados.
+- **Sons**:
+  - os 14 efeitos de habilidades e o impacto genérico foram criados pelo autor no Adobe Firefly, para este projeto; os originais ficam em `assets-source/audio`;
+  - o nocaute (`fatality.mp3`) ainda vem do projeto original, e a origem e a licença dele não estão documentadas, então vale trocá-lo antes de divulgar;
+  - os demais efeitos são sintetizados no navegador.
+- **Torre Automática da Vexra**: ilustração criada pelo autor; o original fica em `assets-source/images`.
 - **Fontes**: [Cinzel](https://fonts.google.com/specimen/Cinzel) e [Barlow Semi Condensed](https://fonts.google.com/specimen/Barlow+Semi+Condensed), sob a SIL Open Font License (licenças em `src/assets/fonts`).
 
 
@@ -322,3 +332,30 @@ O `BattleEngine`, a IA, as regras das habilidades e o balanceamento não mudaram
 - **Kael**: nova ilustração.
 
 Os retratos dos dois foram refeitos a partir das novas imagens, e o enquadramento em `art.ts` foi medido de novo (proporção, centro do corpo, altura do peito e vitrine da seleção). As capturas em `docs/screenshots` foram atualizadas.
+
+**3.5.0.** Integrou a biblioteca sonora e a arte da torre:
+
+- **15 sons próprios**: Orbe Astral e Supernova (Lyra); Rajada Perfurante, Granada Explosiva e tiro da Torre (Vexra); Golpe Devastador e Ruptura da Terra (Dravenor); Lâmina Arcana e Corte Dimensional (Kael); Lâmina Sombria, Eclipse e Lâmina Dilacerante (Nyxara e Vaelith); Impacto do Abismo e Ruptura do Vazio (Vorath); e um impacto genérico, que substituiu o som de soco do projeto do curso.
+- **Sincronização com a animação.** Cada som é agendado para que o seu momento principal (disparo, golpe, explosão, clarão) caia exatamente no efeito visual correspondente, e não no clique.
+- **Volume equilibrado.** Os arquivos foram normalizados por loudness, sem distorção, e um compressor de segurança evita picos quando vários sons coincidem.
+- **Torre Automática** com ilustração própria; os tiros saem da boca do canhão.
+
+O motor, a IA, as habilidades e o balanceamento não mudaram. Detalhes, medições e como adicionar novos sons estão em [`docs/audio.md`](docs/audio.md).
+
+**3.6.0.** Refez a tela de seleção e preparou os ícones das habilidades:
+
+- **Lutador em destaque.** Arte grande de corpo inteiro à esquerda, descrição, atributos e passiva no centro, habilidades com custo e recarga à direita e uma faixa com os seis retratos embaixo para trocar de personagem. Tudo com os dados reais do jogo.
+- **Mesma tela para o adversário**, com a opção Aleatório e a escolha do cenário. Desafio, progressão, dificuldade e navegação por teclado continuam iguais.
+- **Responsiva.** Sem rolar no desktop; em tablet e celular, uma coluna com a faixa de retratos rolando na horizontal.
+- **Ícones de habilidade prontos para receber as artes.** Basta colocar cada arquivo em `src/assets/images/abilities/<personagem>/<id>.webp`; enquanto não existem, aparece um marcador discreto. Os botões de habilidade no combate também mostram o ícone.
+
+Detalhes, diferenças em relação aos conceitos e a lista de ids estão em [`docs/selecao.md`](docs/selecao.md).
+
+**3.7.0.** Três novos cenários:
+
+- **Ruínas Antigas, Templo do Eclipse e Dimensão Abissal**, ao lado da Arena Arcana e do Ringue. As artes são usadas como foram enviadas.
+- **Escolha com miniaturas** no passo do adversário (Duelo), com o cenário escolhido aparecendo ao fundo como prévia.
+- **Desafio:** as duas primeiras etapas continuam na Arena Arcana e no Ringue; a terceira é nas Ruínas Antigas e o duelo final, na Dimensão Abissal.
+- **Piso sob os lutadores em qualquer tela**, com ajustes discretos de contraste por cenário.
+
+Combate, personagens, sons, animações e balanceamento não mudaram. Detalhes em [`docs/cenarios.md`](docs/cenarios.md).
