@@ -41,10 +41,26 @@ describe('ícones das habilidades', () => {
       for (const id of ids) {
         const character = folder === 'vaelith' ? 'nyxara' : (folder as (typeof CHARACTER_IDS)[number]);
         const url = abilityIconUrl(character, id, folder === 'vaelith' ? 'eclipse' : 'base');
-        expect(url === null || typeof url === 'string').toBe(true);
-        expect(url !== null).toBe(`${folder}/${id}` in ABILITY_ICON_URLS);
+        const own = `${folder}/${id}` in ABILITY_ICON_URLS;
+        const base = `${character}/${id}` in ABILITY_ICON_URLS;
+        expect(url !== null).toBe(own || base);
       }
     }
+  });
+
+  it('todas as habilidades dos seis personagens e da Vaelith têm ícone ilustrado', () => {
+    const missing: string[] = [];
+    for (const [folder, ids] of Object.entries(abilityIdsByFolder())) {
+      const character = folder === 'vaelith' ? 'nyxara' : (folder as (typeof CHARACTER_IDS)[number]);
+      for (const id of ids) if (!abilityIconUrl(character, id, folder === 'vaelith' ? 'eclipse' : 'base')) missing.push(`${folder}/${id}`);
+    }
+    expect(missing).toEqual([]);
+  });
+
+  it('a forma alternativa usa o ícone próprio e, sem ele, o da forma base', () => {
+    expect(abilityIconUrl('nyxara', 'shadow-blade', 'eclipse')).toBe(ABILITY_ICON_URLS['vaelith/shadow-blade']);
+    expect(abilityIconUrl('nyxara', 'shadow-blade')).toBe(ABILITY_ICON_URLS['nyxara/shadow-blade']);
+    expect(abilityIconUrl('nyxara', 'eclipse', 'eclipse')).toBe(ABILITY_ICON_URLS['vaelith/eclipse'] ?? ABILITY_ICON_URLS['nyxara/eclipse']);
   });
 
   it('o marcador provisório indica o tipo da habilidade', () => {

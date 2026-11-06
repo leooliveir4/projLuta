@@ -2268,6 +2268,16 @@
   width: 34px;
 }
 
+/* Com a ilustração, o ícone é um pouco maior para os detalhes aparecerem. */
+.skill-button:has(.ability-icon--art) {
+  column-gap: 6px;
+  padding-right: 10px;
+}
+
+.skill-button__icon.ability-icon--art {
+  width: 38px;
+}
+
 /* Com o ícone, o nome não quebra no meio da palavra; nomes longos ficam um pouco menores. */
 .skill-button:has(.skill-button__icon) .skill-button__name {
   overflow-wrap: normal;
@@ -2772,6 +2782,10 @@
   .skill-button__icon {
     width: 34px;
   }
+
+  .skill-button__icon.ability-icon--art {
+    width: 40px;
+  }
 }
 
 @media (max-width: 420px) {
@@ -2782,6 +2796,14 @@
 
   .skill-button__icon {
     width: 30px;
+  }
+
+  .skill-button:has(.ability-icon--art) {
+    column-gap: 6px;
+  }
+
+  .skill-button__icon.ability-icon--art {
+    width: 34px;
   }
 }
 
@@ -2852,5 +2874,26 @@
     overflow: hidden;
     clip-path: inset(50%);
     white-space: nowrap;
+  }
+}
+
+/*
+ * Botões de habilidade estreitos (algumas larguras de notebook e tablet): o nome fica um pouco
+ * menor para palavras longas, como "Dimensional", caberem ao lado do ícone sem quebrar.
+ */
+/* O "Voltar" fica de fora: com contenção de largura, ele perderia a largura do texto. */
+.actions__menu--abilities .skill-button:not(.skill-button--back) {
+  container-type: inline-size;
+}
+
+@container (max-width: 168px) {
+  .skill-button:has(.skill-button__icon) .skill-button__name {
+    font-size: 0.8rem;
+  }
+}
+
+@container (max-width: 156px) {
+  .skill-button:has(.skill-button__icon) .skill-button__name {
+    font-size: 0.76rem;
   }
 }

@@ -33,9 +33,13 @@ export function abilityIconKey(characterId: CharacterId, abilityId: string, form
   return `${FORM_FOLDERS[form] ?? characterId}/${abilityId}`;
 }
 
-/** Endereço do ícone ilustrado, ou `null` quando ele ainda não foi enviado. */
+/**
+ * Endereço do ícone ilustrado, ou `null` quando ele ainda não foi enviado. Numa forma
+ * alternativa sem ícone próprio para a habilidade, usa o da forma base (por exemplo, o botão
+ * do Eclipse bloqueado durante a transformação mostra o ícone do Eclipse da Nyxara).
+ */
 export function abilityIconUrl(characterId: CharacterId, abilityId: string, form = 'base'): string | null {
-  return ABILITY_ICON_URLS[abilityIconKey(characterId, abilityId, form)] ?? null;
+  return ABILITY_ICON_URLS[abilityIconKey(characterId, abilityId, form)] ?? ABILITY_ICON_URLS[abilityIconKey(characterId, abilityId)] ?? null;
 }
 
 /** Símbolo do marcador provisório, pelo tipo principal da habilidade. */

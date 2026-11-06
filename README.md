@@ -359,3 +359,10 @@ Detalhes, diferenças em relação aos conceitos e a lista de ids estão em [`do
 - **Piso sob os lutadores em qualquer tela**, com ajustes discretos de contraste por cenário.
 
 Combate, personagens, sons, animações e balanceamento não mudaram. Detalhes em [`docs/cenarios.md`](docs/cenarios.md).
+
+**3.8.0.** Ícones ilustrados das habilidades:
+
+- **27 ícones** (versão 1, conceitual): as quatro habilidades de cada personagem e as três da Vaelith, nos botões de habilidade do combate e na seleção. O jogo escolhe o ícone pela forma ativa: no Eclipse aparecem os da Vaelith.
+- **Botões ajustados**: o ícone ficou um pouco maior, e o nome se ajusta para caber ao lado dele em qualquer largura de tela.
+
+Detalhes em [`docs/selecao.md`](docs/selecao.md).

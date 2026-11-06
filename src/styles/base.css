@@ -591,6 +591,20 @@ dialog.modal::backdrop {
   object-fit: cover;
 }
 
+/* A ilustração já traz a própria moldura: sem o chanfro e a borda dourada do marcador. */
+.ability-icon--art {
+  padding: 0;
+  clip-path: none;
+  border-radius: 6px;
+  background: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+}
+
+.ability-icon--art > img {
+  clip-path: none;
+  border-radius: inherit;
+}
+
 .ability-icon--fallback {
   background: linear-gradient(150deg, rgba(246, 212, 138, 0.55) 0%, rgba(92, 70, 160, 0.6) 55%, rgba(201, 149, 63, 0.5) 100%);
 }
