@@ -52,15 +52,17 @@ O `BattleEngine`, a IA, as fórmulas, os atributos, os custos, as recargas, os s
 
 ## Ícones das habilidades
 
-A estrutura está pronta, mas **nenhum ícone final existe ainda**. Hoje aparece o marcador provisório em todas as habilidades, tanto na seleção quanto nos botões de combate.
+> **Atualização (3.8.0):** os 27 ícones ilustrados (versão 1, conceitual) foram integrados. Todas as habilidades dos seis personagens e as três versões da Vaelith têm ícone. O botão bloqueado do Eclipse, durante a transformação, usa o ícone do Eclipse da Nyxara. O marcador provisório continua existindo para qualquer habilidade futura sem ícone.
+
+A estrutura foi preparada na 3.6.0, quando ainda não havia ícones finais.
 
 ### Como adicionar
 
 Coloque o arquivo em `src/assets/images/abilities/<pasta>/<id>.webp` (ou `.png`). O jogo encontra o arquivo sozinho no build, sem mudar código. Se um ícone faltar, aparece o marcador no lugar, e nada é bloqueado.
 
-- **Formato:** quadrado, de preferência 512 × 512, sem texto, sem retrato e sem moldura (a moldura dourada é do jogo).
+- **Formato:** quadrado; os atuais têm 256 × 256, e 512 × 512 também serve. Sem texto e sem retrato. Os ícones da 3.8.0 trazem a própria moldura, então o jogo não acrescenta outra por cima.
 - **Leitura:** precisa funcionar em 30 a 84 px.
-- **Pasta:** é o personagem. As versões do Eclipse ficam em `vaelith/`, com os mesmos ids da Nyxara; o jogo escolhe a pasta pela forma ativa.
+- **Pasta:** é o personagem. As versões do Eclipse ficam em `vaelith/`, com os mesmos ids da Nyxara; o jogo escolhe a pasta pela forma ativa. Se a pasta da forma não tiver o ícone, usa o da forma base.
 
 | Pasta | Ids |
 | --- | --- |

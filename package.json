@@ -1,7 +1,7 @@
 {
   "name": "jogo-de-luta-rpg",
   "private": true,
-  "version": "3.7.0",
+  "version": "3.8.0",
   "description": "RPG de combate por turnos em TypeScript, evoluído a partir do Jogo de Luta do curso de JavaScript da B7Web.",
   "type": "module",
   "engines": {
