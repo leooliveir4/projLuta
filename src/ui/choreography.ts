@@ -50,6 +50,63 @@ export interface Move {
   groundWave?: boolean;
 }
 
+/**
+ * Durações da coreografia (ms). Ficam aqui, num só lugar, porque a animação e o som usam
+ * os mesmos números: o som é agendado para o instante em que o golpe aparece na tela.
+ */
+export const TIMING = {
+  /** Investida até o adversário. */
+  approach: 340,
+  /** Mira rápida antes de um disparo sem carga. */
+  aim: 130,
+  /** Energia que se acumula antes de um disparo ou de uma conjuração forte. */
+  charge: 520,
+  /** Conjuração sem carga. */
+  castAim: 220,
+  /** Golpe no chão antes de a rachadura correr (Ruptura da Terra). */
+  slam: 140,
+  /** Rachadura correndo pelo chão até o alvo. */
+  groundWave: 300,
+  /** Energia que converge antes do clarão da transformação. */
+  formCharge: 620,
+} as const;
+
+/** Tempo de voo de cada projétil (ms); o tiro depende da distância em pixels. */
+export function flightMs(kind: ProjectileKind, distancePx: number): number {
+  switch (kind) {
+    case 'bullet':
+      return Math.max(110, distancePx * 0.28);
+    case 'grenade':
+      return 460;
+    case 'nova':
+      return 420;
+    case 'orb':
+    default:
+      return 340;
+  }
+}
+
+/**
+ * Quanto falta, a partir do início da preparação, para o disparo (`launchMs`) e para o
+ * contato com o alvo (`impactMs`). `distancePx` é a distância da arma ao alvo.
+ */
+export function moveTiming(move: Move, distancePx: number): { launchMs: number; impactMs: number } {
+  switch (move.approach) {
+    case 'melee':
+      return { launchMs: TIMING.approach, impactMs: TIMING.approach };
+    case 'ranged': {
+      const launchMs = move.charge ? TIMING.charge : TIMING.aim;
+      return { launchMs, impactMs: launchMs + (move.projectile ? flightMs(move.projectile, distancePx) : 0) };
+    }
+    case 'cast':
+      if (move.groundWave) return { launchMs: TIMING.slam, impactMs: TIMING.slam + TIMING.groundWave };
+      return move.charge ? { launchMs: TIMING.charge, impactMs: TIMING.charge } : { launchMs: TIMING.castAim, impactMs: TIMING.castAim };
+    case 'self':
+    default:
+      return { launchMs: 0, impactMs: 0 };
+  }
+}
+
 /** Ataque básico de cada personagem. */
 export const BASIC_MOVES: Record<CharacterId, Move> = {
   lyra: { approach: 'ranged', projectile: 'orb', impact: 'burst' },

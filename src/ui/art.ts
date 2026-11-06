@@ -12,24 +12,48 @@ import vaelithPortrait from '../assets/images/portraits/nyxara-eclipse.webp';
 import nyxaraPortrait from '../assets/images/portraits/nyxara.webp';
 import vexraPortrait from '../assets/images/portraits/vexra.webp';
 import vorathPortrait from '../assets/images/portraits/vorath.webp';
+import vexraTurret from '../assets/images/effects/vexra-turret.webp';
 import arcaneArena from '../assets/images/arena-arcana.svg';
 import ring from '../assets/images/ringue.webp';
+import abyssalDimension from '../assets/images/stages/dimensao-abissal.webp';
+import ancientRuins from '../assets/images/stages/ruinas-antigas.webp';
+import eclipseTemple from '../assets/images/stages/templo-eclipse.webp';
 import type { CharacterId } from '../core/types.ts';
 
-export type StageId = 'arcane' | 'ring';
+export type StageId = 'arcane' | 'ring' | 'ruinas-antigas' | 'templo-eclipse' | 'dimensao-abissal';
 
 export interface StageArt {
   name: string;
   image: string;
 }
 
-/** Cenários das batalhas. A Arena Arcana é original; o ringue vem do projeto do curso. */
+/**
+ * Cenários das batalhas. A Arena Arcana é original; o ringue vem do projeto do curso; Ruínas
+ * Antigas, Templo do Eclipse e Dimensão Abissal são artes finais (1672 × 941) usadas sem
+ * alteração. O enquadramento e o contraste de cada um ficam em battle.css
+ * (`.battle__stage--<id>`).
+ */
 export const STAGES: Record<StageId, StageArt> = {
   arcane: { name: 'Arena Arcana', image: arcaneArena },
   ring: { name: 'Ringue', image: ring },
+  'ruinas-antigas': { name: 'Ruínas Antigas', image: ancientRuins },
+  'templo-eclipse': { name: 'Templo do Eclipse', image: eclipseTemple },
+  'dimensao-abissal': { name: 'Dimensão Abissal', image: abyssalDimension },
 };
 
-export const STAGE_IDS: readonly StageId[] = ['arcane', 'ring'];
+export const STAGE_IDS: readonly StageId[] = ['arcane', 'ring', 'ruinas-antigas', 'templo-eclipse', 'dimensao-abissal'];
+
+/**
+ * Cenário de cada etapa do desafio. As duas primeiras continuam como antes (Arena Arcana e
+ * Ringue); a terceira passa às Ruínas Antigas, e o duelo final, contra a própria sombra,
+ * acontece na Dimensão Abissal.
+ */
+export const CHALLENGE_STAGES: readonly StageId[] = ['arcane', 'ring', 'ruinas-antigas', 'dimensao-abissal'];
+
+/** Cenário de uma etapa do desafio (se houver mais etapas que cenários, a lista recomeça). */
+export function challengeStage(index: number): StageId {
+  return CHALLENGE_STAGES[((index % CHALLENGE_STAGES.length) + CHALLENGE_STAGES.length) % CHALLENGE_STAGES.length];
+}
 
 export const MENU_BACKDROP = arcaneArena;
 
@@ -150,6 +174,11 @@ export const CHARACTER_ART: Record<CharacterId, CharacterArt> = {
     secondary: '#7a4ad0',
   },
 };
+
+/** Torre Automática da Vexra (arte própria, apontando para a direita). */
+export const TURRET_ART = vexraTurret;
+/** Boca do canhão da torre na imagem [x, y], de onde saem os tiros. */
+export const TURRET_MUZZLE: readonly [number, number] = [0.92, 0.26];
 
 /** Largura máxima padrão de uma arte na arena, em fração da largura da arena. */
 export const DEFAULT_MAX_WIDTH = 0.46;

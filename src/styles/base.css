@@ -559,3 +559,54 @@ dialog.modal::backdrop {
   transition-delay: 0ms !important;
   scroll-behavior: auto !important;
 }
+
+/* Ícone de habilidade ------------------------------------------------ */
+
+/*
+ * Quadrado com moldura dourada fina. Com a ilustração, mostra a imagem; sem ela, um marcador
+ * discreto (símbolo pelo tipo da habilidade), que deixa claro que o ícone final ainda falta.
+ */
+.ability-icon {
+  --notch: 14%;
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+  aspect-ratio: 1;
+  padding: 2px;
+  clip-path: polygon(var(--notch) 0, calc(100% - var(--notch)) 0, 100% var(--notch), 100% calc(100% - var(--notch)), calc(100% - var(--notch)) 100%, var(--notch) 100%, 0 calc(100% - var(--notch)), 0 var(--notch));
+  background: linear-gradient(150deg, #f6d48a 0%, #8c6220 45%, #c9953f 100%);
+}
+
+.ability-icon > img,
+.ability-icon--fallback::before {
+  grid-area: 1 / 1;
+  width: 100%;
+  height: 100%;
+  clip-path: inherit;
+}
+
+.ability-icon > img {
+  display: block;
+  object-fit: cover;
+}
+
+.ability-icon--fallback {
+  background: linear-gradient(150deg, rgba(246, 212, 138, 0.55) 0%, rgba(92, 70, 160, 0.6) 55%, rgba(201, 149, 63, 0.5) 100%);
+}
+
+.ability-icon--fallback::before {
+  content: '';
+  background:
+    radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--c1, var(--arcane)) 38%, transparent), transparent 70%),
+    linear-gradient(180deg, #1d1546, #0e0a26);
+}
+
+.ability-icon--fallback svg {
+  grid-area: 1 / 1;
+  position: relative;
+  width: 46%;
+  height: 46%;
+  color: color-mix(in srgb, var(--gold-light) 70%, transparent);
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--c1, var(--arcane)) 70%, transparent));
+}

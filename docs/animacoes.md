@@ -78,7 +78,7 @@ Entre as ações, os dois lutadores respiram de leve.
 | Escudo Astral | Cúpula azul translúcida |
 | Queimadura | Brasas subindo do corpo |
 | Sangramento | Gotas escorrendo |
-| Torre Automática | Torre no chão, com luz de mira |
+| Torre Automática | Torre no chão (ilustração própria desde a 3.5.0) |
 | Marca do Abismo | Selo roxo girando acima da cabeça |
 | Lentidão e Torpor | Anel tracejado pulsando nos pés |
 | Sobrecarga, Duelo Perfeito, Fúria, Força | Contorno pulsante e círculo de energia |
@@ -163,7 +163,7 @@ Durante uma pose com arquivo próprio, a inclinação feita em CSS é desligada,
 
 ### Outras peças de arte que melhorariam o resultado
 
-- **Torre Automática.** Hoje é um pequeno aparelho desenhado em CSS. Uma ilustração própria (WebP transparente, cerca de 200 × 160) pode substituí-la sem mudar a lógica.
+- **Torre Automática.** Feito na 3.5.0: a torre desenhada em CSS deu lugar à ilustração própria (`src/assets/images/effects/vexra-turret.webp`), e os tiros saem da boca do canhão.
 - **Efeitos pintados.** Os efeitos atuais são formas geométricas com brilho. Folhas de efeito desenhadas (uma explosão, um corte, uma fenda) podem entrar no lugar das classes `vfx-*` correspondentes. Um exemplo é uma sequência de quadros de explosão, em PNG ou WebP.
 - **Animação quadro a quadro de verdade.** Por exemplo, 6 a 8 quadros por golpe. Exigiria um formato de folha de sprites e um pequeno leitor de quadros. A estrutura de poses já separa onde isso entraria, mas esse leitor não foi implementado.
 
@@ -186,4 +186,4 @@ Durante uma pose com arquivo próprio, a inclinação feita em CSS é desligada,
 - As capturas são quadros espaçados, não vídeo. A fluidez foi avaliada pela sequência, sem medição de quadros por segundo e sem aparelhos fracos.
 - Foram usados só o Chrome e telas simuladas. Firefox, Safari e celulares reais não foram testados.
 - Em golpes corpo a corpo, lutadores largos (como o Dravenor) encostam e sobrepõem um pouco o adversário no impacto; isso foi deixado de propósito para o golpe "chegar".
-- Os sons não mudaram.
+- Os sons não mudaram nesta versão. A 3.5.0 integrou sons próprios sincronizados com estas animações (veja [`audio.md`](audio.md)).
