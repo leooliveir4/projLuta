@@ -1,0 +1,92 @@
+{
+  "dravenor-devastating-blow": {
+    "arquivo": "dravenor-devastating-blow.wav",
+    "loudnessMomentaneoOriginal": -10.0,
+    "alvo": -12,
+    "ganhoDb": -2.0
+  },
+  "dravenor-earth-rupture": {
+    "arquivo": "dravenor-earth-rupture.wav",
+    "loudnessMomentaneoOriginal": -6.9,
+    "alvo": -10.5,
+    "ganhoDb": -3.6
+  },
+  "general-combat-impact": {
+    "arquivo": "general-combat-impact.wav",
+    "loudnessMomentaneoOriginal": -14.6,
+    "alvo": -13,
+    "ganhoDb": 1.6
+  },
+  "kael-arcane-blade": {
+    "arquivo": "kael-arcane-blade.wav",
+    "loudnessMomentaneoOriginal": -8.5,
+    "alvo": -12,
+    "ganhoDb": -3.5
+  },
+  "kael-dimensional-cut": {
+    "arquivo": "kael-dimensional-cut.wav",
+    "loudnessMomentaneoOriginal": -10.8,
+    "alvo": -10.5,
+    "ganhoDb": 0.3
+  },
+  "lyra-astral-orb": {
+    "arquivo": "lyra-astral-orb.wav",
+    "loudnessMomentaneoOriginal": -13.6,
+    "alvo": -12,
+    "ganhoDb": 1.6
+  },
+  "lyra-supernova": {
+    "arquivo": "lyra-supernova.wav",
+    "loudnessMomentaneoOriginal": -7.3,
+    "alvo": -10.5,
+    "ganhoDb": -3.2
+  },
+  "nyxara-eclipse": {
+    "arquivo": "nyxara-eclipse.mp3",
+    "loudnessMomentaneoOriginal": -10.5,
+    "alvo": -10.5,
+    "ganhoDb": -0.0
+  },
+  "nyxara-shadow-blade": {
+    "arquivo": "nyxara-shadow-blade.wav",
+    "loudnessMomentaneoOriginal": -12.3,
+    "alvo": -12,
+    "ganhoDb": 0.3
+  },
+  "vaelith-shadow-blade": {
+    "arquivo": "vaelith-shadow-blade.wav",
+    "loudnessMomentaneoOriginal": -10.6,
+    "alvo": -12,
+    "ganhoDb": -1.4
+  },
+  "vexra-auto-turret-shot": {
+    "arquivo": "vexra-auto-turret-shot.wav",
+    "loudnessMomentaneoOriginal": -8.9,
+    "alvo": -14,
+    "ganhoDb": -5.1
+  },
+  "vexra-explosive-grenade": {
+    "arquivo": "vexra-explosive-grenade.wav",
+    "loudnessMomentaneoOriginal": -14.2,
+    "alvo": -12,
+    "ganhoDb": 2.2
+  },
+  "vexra-piercing-burst": {
+    "arquivo": "vexra-piercing-burst.wav",
+    "loudnessMomentaneoOriginal": -6.7,
+    "alvo": -12,
+    "ganhoDb": -5.3
+  },
+  "vorath-abyss-impact": {
+    "arquivo": "vorath-abyss-impact.wav",
+    "loudnessMomentaneoOriginal": -11.4,
+    "alvo": -12,
+    "ganhoDb": -0.6
+  },
+  "vorath-void-rupture": {
+    "arquivo": "vorath-void-rupture.wav",
+    "loudnessMomentaneoOriginal": -6.2,
+    "alvo": -10.5,
+    "ganhoDb": -4.3
+  }
+}

@@ -1,0 +1,29 @@
+[
+  {
+    "name": "Ruínas Antigas",
+    "id": "ruinas-antigas",
+    "asset": "mapas/ruinas-antigas.webp",
+    "source_png": "arena_lunar_das_ruínas_douradas.png",
+    "width": 1672,
+    "height": 941,
+    "bytes_webp": 398394
+  },
+  {
+    "name": "Templo do Eclipse",
+    "id": "templo-eclipse",
+    "asset": "mapas/templo-eclipse.webp",
+    "source_png": "templo_do_eclipse_rubro.png",
+    "width": 1672,
+    "height": 941,
+    "bytes_webp": 275300
+  },
+  {
+    "name": "Dimensão Abissal",
+    "id": "dimensao-abissal",
+    "asset": "mapas/dimensao-abissal.webp",
+    "source_png": "arena_do_vórtice_abissal.png",
+    "width": 1672,
+    "height": 941,
+    "bytes_webp": 340756
+  }
+]
